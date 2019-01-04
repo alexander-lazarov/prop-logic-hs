@@ -1,11 +1,3 @@
--- import Test.HUnit
-
--- test1 = TestCase (assertEqual "asd" 1 2)
-
--- tests = TestList [TestLabel "test1" test1]
-
--- runTestTT tests
---
 import Test.Hspec
 import Control.Exception (evaluate)
 import PropositionalLogic
@@ -69,6 +61,20 @@ main = hspec $ do
         (evalWithEnv env $ cf `Implies` ct) `shouldBe` True
       it "f f" $ do
         (evalWithEnv env $ cf `Implies` cf) `shouldBe` True
+
+  describe "allVars" $ do
+    it "returns an empty list when no vars" $ do
+      (allVars $ ct ) `shouldBe` []
+
+    it "handles the example case" $ do
+      (allVars $ Var "x" `And` Var "y" `And` Const True) `shouldBe` ["x", "y"]
+
+  describe "bind" $ do
+    it "handles empty list" $ do
+      (bind [] []) `shouldBe` []
+
+    it "handles the example case" $ do
+      (bind ["x", "y"] [True, False]) `shouldBe` [("x", True), ("y", False)]
 
   where
     ct = Const True

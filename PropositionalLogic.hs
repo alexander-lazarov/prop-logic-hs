@@ -1,10 +1,12 @@
-module PropositionalLogic (
-Name,
-Prop (..),
-Environment,
-varValue,
-evalWithEnv)
-where
+module PropositionalLogic
+( Name
+, Prop (..)
+, Environment
+, varValue
+, evalWithEnv
+, allVars
+, bind
+) where
 
 type Name = String
 type Environment = [(Name, Bool)]
@@ -42,4 +44,18 @@ evalWithEnv env (Or x y)      = (evalWithEnv env x) || (evalWithEnv env y)
 evalWithEnv env (Implies x y) = (not xv) || (xv && yv)
     where xv = evalWithEnv env x
           yv = evalWithEnv env y
+
+allVars :: Prop -> [Name]
+allVars (Const _)     = []
+allVars (Var x)       = [x]
+allVars (Not x)       = allVars x
+allVars (And x y)     = allVars x ++ allVars y
+allVars (Or x y)      = allVars x ++ allVars y
+allVars (Implies x y) = allVars x ++ allVars y
+
+
+bind :: [Name] -> [Bool] -> Environment
+bind [] _          = []
+bind _ []          = []
+bind (x:xs) (y:ys) = (x, y):(bind xs ys)
 
