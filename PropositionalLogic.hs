@@ -11,6 +11,7 @@ module PropositionalLogic
 , isTautology
 , isSatisfiable
 , isContradiction
+, semanticallyImplies
 ) where
 
 type Name = String
@@ -58,7 +59,6 @@ allVars (And x y)     = allVars x ++ allVars y
 allVars (Or x y)      = allVars x ++ allVars y
 allVars (Implies x y) = allVars x ++ allVars y
 
-
 bind :: [Name] -> [Bool] -> Environment
 bind [] _          = []
 bind _ []          = []
@@ -86,3 +86,7 @@ isSatisfiable p = any (`evalWithEnv` p) (allPropEnvs p)
 isContradiction :: Prop -> Bool
 isContradiction p = isTautology $ Not p
 
+semanticallyImplies :: Prop -> Prop -> Bool
+semanticallyImplies x y = all implies $ allEnvs vars
+  where vars = allVars x ++ allVars y
+        implies = \e -> evalWithEnv e $ x `Implies` y

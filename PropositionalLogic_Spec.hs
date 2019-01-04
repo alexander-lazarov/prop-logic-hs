@@ -132,6 +132,25 @@ main = hspec $ do
     it "example 3" $ do
       (isContradiction $ x `Or` Not x) `shouldBe` False
 
+  describe "sematicallyImplies" $ do
+    it "example 1" $ do
+      (semanticallyImplies x x) `shouldBe` True
+
+    it "example 2" $ do
+      (semanticallyImplies x y) `shouldBe` False
+
+    it "example 3" $ do
+      (semanticallyImplies (x `Or` Not x) x) `shouldBe` False
+
+    it "example 4" $ do
+      (semanticallyImplies x (x `Or` y)) `shouldBe` True
+
+    it "example 5" $ do
+      (semanticallyImplies (x `And` Not x) y) `shouldBe` True
+
+    it "example 6" $ do
+      (semanticallyImplies y (x `Implies` x)) `shouldBe` True
+
   where
     ct = Const True
     cf = Const False
