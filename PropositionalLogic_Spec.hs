@@ -76,8 +76,66 @@ main = hspec $ do
     it "handles the example case" $ do
       (bind ["x", "y"] [True, False]) `shouldBe` [("x", True), ("y", False)]
 
+  describe "allBools" $ do
+    it "0" $ do
+      (allBools 0) `shouldBe` []
+
+    it "1" $ do
+      (allBools 1) `shouldBe` [[False], [True]]
+
+    it "2" $ do
+      (allBools 2) `shouldBe` [[False, False], [False, True], [True, False], [True, True]]
+
+  describe "allEnvs" $ do
+    it "handles 0 vars" $ do
+      (allEnvs []) `shouldBe` []
+
+    it "handles 1 var" $ do
+      (allEnvs ["x"]) `shouldBe` [ [("x", False)]
+                                 , [("x", True)]
+                                 ]
+
+    it "handles 2 vars" $ do
+      (allEnvs ["x", "y"]) `shouldBe` [ [("x", False), ("y", False)]
+                                      , [("x", False), ("y", True)]
+                                      , [("x", True), ("y", False)]
+                                      , [("x", True), ("y", True)]
+                                      ]
+
+  describe "isTautology" $ do
+    it "example 1" $ do
+      (isTautology $ x) `shouldBe` False
+
+    it "example 2" $ do
+      (isTautology $ x `Or` Not x) `shouldBe` True
+
+    it "example 3" $ do
+      (isTautology $ x `Or` y) `shouldBe` False
+
+  describe "isSatisfiable" $ do
+    it "example 1" $ do
+      (isSatisfiable $ x) `shouldBe` True
+
+    it "example 2" $ do
+      (isSatisfiable $ x `Implies` Not x) `shouldBe` True
+
+    it "example 3" $ do
+      (isSatisfiable $ x `And` Not x) `shouldBe` False
+
+  describe "isContradiction" $ do
+    it "example 1" $ do
+      (isContradiction $ x) `shouldBe` False
+
+    it "example 2" $ do
+      (isContradiction $ x `And` Not x) `shouldBe` True
+
+    it "example 3" $ do
+      (isContradiction $ x `Or` Not x) `shouldBe` False
+
   where
     ct = Const True
     cf = Const False
     emptyEnv = []
     env = [("x", True), ("y", False), ("z", True)]
+    x = Var "x"
+    y = Var "y"

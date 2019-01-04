@@ -6,6 +6,11 @@ module PropositionalLogic
 , evalWithEnv
 , allVars
 , bind
+, allBools
+, allEnvs
+, isTautology
+, isSatisfiable
+, isContradiction
 ) where
 
 type Name = String
@@ -58,4 +63,26 @@ bind :: [Name] -> [Bool] -> Environment
 bind [] _          = []
 bind _ []          = []
 bind (x:xs) (y:ys) = (x, y):(bind xs ys)
+
+allBools :: Integer -> [[Bool]]
+allBools 0 = []
+allBools 1 = [[False], [True]]
+allBools n = [ x:xs | x <- [False, True], xs <- allBools $ n -1 ]
+
+allEnvs :: [Name] -> [Environment]
+allEnvs []     = []
+allEnvs (x:[]) = [[(x, False)], [(x, True)]]
+allEnvs (x:xs) = [ e:es | e <- [(x, False), (x, True)], es <- allEnvs xs ]
+
+allPropEnvs :: Prop -> [Environment]
+allPropEnvs = allEnvs . allVars
+
+isTautology :: Prop -> Bool
+isTautology p = all (`evalWithEnv` p) (allPropEnvs p)
+
+isSatisfiable :: Prop -> Bool
+isSatisfiable p = any (`evalWithEnv` p) (allPropEnvs p)
+
+isContradiction :: Prop -> Bool
+isContradiction p = isTautology $ Not p
 
