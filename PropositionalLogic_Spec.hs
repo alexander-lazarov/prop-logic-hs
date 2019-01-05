@@ -189,7 +189,9 @@ main = hspec $ do
     it "OR-2 - case 1" $ do
       (isAxiom $ x `Implies` (y `Or` x)) `shouldBe` True
     it "OR-3 - case 1" $ do
-      (isAxiom or3) `shouldBe` True
+      (isAxiom or3_1) `shouldBe` True
+    it "OR-3 - case 2" $ do
+      (isAxiom or3_2) `shouldBe` True
     it "NOT-1 - case 1" $ do
       (isAxiom not1) `shouldBe` True
 
@@ -208,6 +210,7 @@ main = hspec $ do
     nax2 = xiy `Implies` xiy `Implies` x
     nax3 = xiy `Implies` xiy `Implies` x
     then2 = (x `Implies` yiz) `Implies` (xiy `Implies` xiz)
-    or3 = xiy `Implies` (yiz `Implies` (x `Implies` yiz)) -- TODO - fix
+    or3_1 = xiz `Implies` (yiz `Implies` ((x `Or` y) `Implies` z))
+    or3_2 = xiz `Implies` (yiz `Implies` ((y `Or` x) `Implies` z))
     not1 = (x `Implies` y) `Implies` ((x `Implies` (Not y)) `Implies` Not x)
 

@@ -100,23 +100,24 @@ isAxiom :: Prop -> Bool
 -- NOT-1
 isAxiom ((a `Implies` b)
             `Implies`
-            ((c `Implies` Not d) `Implies` Not e))         = a == c && a == e && b == d
+            ((c `Implies` Not d) `Implies` Not e))       = a == c && a == e && b == d
 -- THEN-2
 isAxiom ((a `Implies` b `Implies` c)
             `Implies`
-            ((d `Implies` e) `Implies` (f `Implies` g)))   = a == d && a == f && b == e && c == g
+            ((d `Implies` e) `Implies` (f `Implies` g))) = a == d && a == f && b == e && c == g
 
 -- OR-3
 isAxiom ((a `Implies` b)
              `Implies`
              ((c `Implies` d)
-                 `Implies` (e `Implies` (f `Implies` g)))) = a == e && b == c && b == f && d == g
+                 `Implies` ((e `Or` f) `Implies` g)))    = ((a == e && c == f) || (a == f && c == e))
+                                                               && b == d && b == g
 -- AND-3
-isAxiom (a `Implies` b `Implies` c `And` d)                = (b == c && a == d) || (a == c && b == d)
+isAxiom (a `Implies` b `Implies` c `And` d)              = (b == c && a == d) || (a == c && b == d)
 -- THEN-1
-isAxiom (a `Implies` _ `Implies` c)                        = a == c
+isAxiom (a `Implies` _ `Implies` c)                      = a == c
 -- AND-1 and AND-2
-isAxiom (a `And` b `Implies` c)                            = a == c || b == c
+isAxiom (a `And` b `Implies` c)                          = a == c || b == c
 -- OR-1 and OR-2
-isAxiom (a `Implies` b `Or` c)                             = a == b || a == c
-isAxiom _                                                  = False
+isAxiom (a `Implies` b `Or` c)                           = a == b || a == c
+isAxiom _                                                = False
