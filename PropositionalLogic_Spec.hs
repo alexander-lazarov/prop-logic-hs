@@ -198,23 +198,34 @@ main = hspec $ do
       (isAxiom $ x `Implies` (Not x `Implies` y)) `shouldBe` True
     it "NOT-3 - case 1" $ do
       (isAxiom $ x `Or` Not x) `shouldBe` True
+  describe "modusPonens" $ do
+    it "case 1" $ do
+      (modusPonens x (x `Implies` y) y) `shouldBe` True
+    it "case 2" $ do
+      (modusPonens x (x `Implies` y) x) `shouldBe` False
+    it "case 1" $ do
+      (modusPonens (x `And` y) (x `Implies` y) y) `shouldBe` False
 
   where
     ct = Const True
     cf = Const False
+
     emptyEnv = []
-    env = [("x", True), ("y", False), ("z", True)]
+    env      = [("x", True), ("y", False), ("z", True)]
+
     x = Var "x"
     y = Var "y"
     z = Var "z"
+
     xiy = x `Implies` y
     xiz = x `Implies` z
     yiz = y `Implies` z
     xay = xiy `And` xiy
-    nax2 = xiy `Implies` xiy `Implies` x
-    nax3 = xiy `Implies` xiy `Implies` x
+
+    nax2  = xiy `Implies` xiy `Implies` x
+    nax3  = xiy `Implies` xiy `Implies` x
     then2 = (x `Implies` yiz) `Implies` (xiy `Implies` xiz)
     or3_1 = xiz `Implies` (yiz `Implies` ((x `Or` y) `Implies` z))
     or3_2 = xiz `Implies` (yiz `Implies` ((y `Or` x) `Implies` z))
-    not1 = (x `Implies` y) `Implies` ((x `Implies` (Not y)) `Implies` Not x)
+    not1  = (x `Implies` y) `Implies` ((x `Implies` (Not y)) `Implies` Not x)
 

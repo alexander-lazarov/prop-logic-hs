@@ -14,6 +14,7 @@ module PropositionalLogic
 , semanticallyImplies
 , semanticallyEquivalent
 , isAxiom
+, modusPonens
 ) where
 
 type Name = String
@@ -125,3 +126,8 @@ isAxiom (a `Implies` b `Or` c)                           = a == b || a == c
 -- NOT 3
 isAxiom (a `Or` Not b)                                   = a == b
 isAxiom _                                                = False
+
+modusPonens :: Prop -> Prop -> Prop -> Bool
+modusPonens a (b `Implies` c) d = a == b && c ==d
+modusPonens _ _ _               = False
+
