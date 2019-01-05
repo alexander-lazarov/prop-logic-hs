@@ -190,6 +190,8 @@ main = hspec $ do
       (isAxiom $ x `Implies` (y `Or` x)) `shouldBe` True
     it "OR-3 - case 1" $ do
       (isAxiom or3) `shouldBe` True
+    it "NOT-1 - case 1" $ do
+      (isAxiom not1) `shouldBe` True
 
   where
     ct = Const True
@@ -206,5 +208,6 @@ main = hspec $ do
     nax2 = xiy `Implies` xiy `Implies` x
     nax3 = xiy `Implies` xiy `Implies` x
     then2 = (x `Implies` yiz) `Implies` (xiy `Implies` xiz)
-    or3 = xiy `Implies` (yiz `Implies` (x `Implies` yiz))
+    or3 = xiy `Implies` (yiz `Implies` (x `Implies` yiz)) -- TODO - fix
+    not1 = (x `Implies` y) `Implies` ((x `Implies` (Not y)) `Implies` Not x)
 

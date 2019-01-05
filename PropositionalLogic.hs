@@ -97,6 +97,10 @@ semanticallyEquivalent :: Prop -> Prop -> Bool
 semanticallyEquivalent x y = (semanticallyImplies x y) && (semanticallyImplies y x)
 
 isAxiom :: Prop -> Bool
+-- NOT-1
+isAxiom ((a `Implies` b)
+            `Implies`
+            ((c `Implies` Not d) `Implies` Not e))         = a == c && a == e && b == d
 -- THEN-2
 isAxiom ((a `Implies` b `Implies` c)
             `Implies`
