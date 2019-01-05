@@ -136,10 +136,10 @@ proofFrom :: [Prop] -> [Prop] -> Bool
 proofFrom xs ys = proofFromHelper xs $ reverse ys
 
 proofFromHelper :: [Prop] -> [Prop] -> Bool
-proofFromHelper _ []      = True
-proofFromHelper xs (y:ys) = proofFromHelper xs ys && (elem y xs || isAxiom y || isModusPonens)
-    where
-        p = ys ++ xs
-        modusPonensPair = \(a, b) -> modusPonens a b y
-        isModusPonens = any modusPonensPair [(a, b) | a <- p, b <- p, a /= b]
+proofFromHelper _  []     = True
+proofFromHelper xs (y:ys) = (elem y xs || isAxiom y || isModusPonens) && proofFromHelper xs ys
+  where
+    p               = ys ++ xs
+    modusPonensPair = \(a, b) -> modusPonens a b y
+    isModusPonens   = any modusPonensPair [(a, b) | a <- p, b <- p]
 

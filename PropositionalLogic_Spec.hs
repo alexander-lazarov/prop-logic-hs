@@ -107,7 +107,7 @@ main = hspec $ do
       (isTautology $ x) `shouldBe` False
 
     it "example 2" $ do
-      (isTautology $ x `Or` Not x) `shouldBe` True
+      (isTautology $ x `Or` nx) `shouldBe` True
 
     it "example 3" $ do
       (isTautology $ x `Or` y) `shouldBe` False
@@ -117,20 +117,20 @@ main = hspec $ do
       (isSatisfiable $ x) `shouldBe` True
 
     it "example 2" $ do
-      (isSatisfiable $ x `Implies` Not x) `shouldBe` True
+      (isSatisfiable $ x `Implies` nx) `shouldBe` True
 
     it "example 3" $ do
-      (isSatisfiable $ x `And` Not x) `shouldBe` False
+      (isSatisfiable $ x `And` nx) `shouldBe` False
 
   describe "isContradiction" $ do
     it "example 1" $ do
       (isContradiction $ x) `shouldBe` False
 
     it "example 2" $ do
-      (isContradiction $ x `And` Not x) `shouldBe` True
+      (isContradiction $ x `And` nx) `shouldBe` True
 
     it "example 3" $ do
-      (isContradiction $ x `Or` Not x) `shouldBe` False
+      (isContradiction $ x `Or` nx) `shouldBe` False
 
   describe "sematicallyImplies" $ do
     it "example 1" $ do
@@ -140,13 +140,13 @@ main = hspec $ do
       (semanticallyImplies x y) `shouldBe` False
 
     it "example 3" $ do
-      (semanticallyImplies (x `Or` Not x) x) `shouldBe` False
+      (semanticallyImplies (x `Or` nx) x) `shouldBe` False
 
     it "example 4" $ do
       (semanticallyImplies x (x `Or` y)) `shouldBe` True
 
     it "example 5" $ do
-      (semanticallyImplies (x `And` Not x) y) `shouldBe` True
+      (semanticallyImplies (x `And` nx) y) `shouldBe` True
 
     it "example 6" $ do
       (semanticallyImplies y (x `Implies` x)) `shouldBe` True
@@ -195,9 +195,9 @@ main = hspec $ do
     it "NOT-1 - case 1" $ do
       (isAxiom not1) `shouldBe` True
     it "NOT-2 - case 1" $ do
-      (isAxiom $ x `Implies` (Not x `Implies` y)) `shouldBe` True
+      (isAxiom $ x `Implies` (nx`Implies` y)) `shouldBe` True
     it "NOT-3 - case 1" $ do
-      (isAxiom $ x `Or` Not x) `shouldBe` True
+      (isAxiom $ x `Or` nx) `shouldBe` True
   describe "modusPonens" $ do
     it "case 1" $ do
       (modusPonens x (x `Implies` y) y) `shouldBe` True
@@ -208,8 +208,10 @@ main = hspec $ do
   describe "proofFrom" $ do
     it "case 1" $ do
       (proofFrom hypSymAnd symAnd) `shouldBe` True
-    -- it "case 2" $ do
-    --   (proofFrom [] impl) `shouldBe` True
+    it "case 2" $ do
+      (proofFrom [] impl) `shouldBe` True
+    it "case 3" $ do
+      (proofFrom [] [x `And` y]) `shouldBe` False
 
   where
     ct = Const True
@@ -226,13 +228,15 @@ main = hspec $ do
     xiz = x `Implies` z
     yiz = y `Implies` z
     xay = xiy `And` xiy
+    nx  = Not x
+    ny  = Not y
 
     nax2  = xiy `Implies` xiy `Implies` x
     nax3  = xiy `Implies` xiy `Implies` x
     then2 = (x `Implies` yiz) `Implies` (xiy `Implies` xiz)
     or3_1 = xiz `Implies` (yiz `Implies` ((x `Or` y) `Implies` z))
     or3_2 = xiz `Implies` (yiz `Implies` ((y `Or` x) `Implies` z))
-    not1  = (x `Implies` y) `Implies` ((x `Implies` (Not y)) `Implies` Not x)
+    not1  = (x `Implies` y) `Implies` ((x `Implies` ny) `Implies` nx)
 
     hypSymAnd = [x `And` y]
     symAnd    = [ x `And` y `Implies` x
@@ -243,9 +247,9 @@ main = hspec $ do
                 , y `Implies` x `Implies` y `And` x
                 , x `Implies` y `And` x
                 , y `And` x]
-     -- impl     = [ ((x `Implies` ((y `Implies` x) `Implies` x)) `Implies` ((x `Implies` (y `Implies` x)) `Implies` (x `Implies` x)))
-     --            , (x `Implies` ((y `Implies` x) `Implies` x))
-     --            , ((x `Implies` (y `Implies` x)) `Implies` (x `Implies` x))
-     --            , (x `Implies` (y `Implies` x))
-     --            , (x `Implies` x)
-     --            ]
+    impl     = [ ((x `Implies` ((y `Implies` x) `Implies` x)) `Implies` ((x `Implies` (y `Implies` x)) `Implies` (x `Implies` x)))
+               , (x `Implies` ((y `Implies` x) `Implies` x))
+               , ((x `Implies` (y `Implies` x)) `Implies` (x `Implies` x))
+               , (x `Implies` (y `Implies` x))
+               , (x `Implies` x)
+               ]
