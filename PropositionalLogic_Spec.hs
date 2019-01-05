@@ -194,6 +194,10 @@ main = hspec $ do
       (isAxiom or3_2) `shouldBe` True
     it "NOT-1 - case 1" $ do
       (isAxiom not1) `shouldBe` True
+    it "NOT-2 - case 1" $ do
+      (isAxiom $ x `Implies` (Not x `Implies` y)) `shouldBe` True
+    it "NOT-3 - case 1" $ do
+      (isAxiom $ x `Or` Not x) `shouldBe` True
 
   where
     ct = Const True

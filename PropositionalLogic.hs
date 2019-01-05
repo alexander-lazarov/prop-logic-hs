@@ -114,10 +114,14 @@ isAxiom ((a `Implies` b)
                                                                && b == d && b == g
 -- AND-3
 isAxiom (a `Implies` b `Implies` c `And` d)              = (b == c && a == d) || (a == c && b == d)
+-- NOT-2
+isAxiom (a `Implies` (Not b `Implies` c))                = a == b
 -- THEN-1
 isAxiom (a `Implies` _ `Implies` c)                      = a == c
 -- AND-1 and AND-2
 isAxiom (a `And` b `Implies` c)                          = a == c || b == c
 -- OR-1 and OR-2
 isAxiom (a `Implies` b `Or` c)                           = a == b || a == c
+-- NOT 3
+isAxiom (a `Or` Not b)                                   = a == b
 isAxiom _                                                = False
