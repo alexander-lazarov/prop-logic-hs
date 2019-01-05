@@ -205,6 +205,11 @@ main = hspec $ do
       (modusPonens x (x `Implies` y) x) `shouldBe` False
     it "case 1" $ do
       (modusPonens (x `And` y) (x `Implies` y) y) `shouldBe` False
+  describe "proofFrom" $ do
+    it "case 1" $ do
+      (proofFrom hypSymAnd symAnd) `shouldBe` True
+    -- it "case 2" $ do
+    --   (proofFrom [] impl) `shouldBe` True
 
   where
     ct = Const True
@@ -229,3 +234,18 @@ main = hspec $ do
     or3_2 = xiz `Implies` (yiz `Implies` ((y `Or` x) `Implies` z))
     not1  = (x `Implies` y) `Implies` ((x `Implies` (Not y)) `Implies` Not x)
 
+    hypSymAnd = [x `And` y]
+    symAnd    = [ x `And` y `Implies` x
+                , x `And` y `Implies` y
+                , x `And` y
+                , y
+                , x
+                , y `Implies` x `Implies` y `And` x
+                , x `Implies` y `And` x
+                , y `And` x]
+     -- impl     = [ ((x `Implies` ((y `Implies` x) `Implies` x)) `Implies` ((x `Implies` (y `Implies` x)) `Implies` (x `Implies` x)))
+     --            , (x `Implies` ((y `Implies` x) `Implies` x))
+     --            , ((x `Implies` (y `Implies` x)) `Implies` (x `Implies` x))
+     --            , (x `Implies` (y `Implies` x))
+     --            , (x `Implies` x)
+     --            ]

@@ -15,6 +15,7 @@ module PropositionalLogic
 , semanticallyEquivalent
 , isAxiom
 , modusPonens
+, proofFrom
 ) where
 
 type Name = String
@@ -130,4 +131,15 @@ isAxiom _                                                = False
 modusPonens :: Prop -> Prop -> Prop -> Bool
 modusPonens a (b `Implies` c) d = a == b && c ==d
 modusPonens _ _ _               = False
+
+proofFrom :: [Prop] -> [Prop] -> Bool
+proofFrom xs ys = proofFromHelper xs $ reverse ys
+
+proofFromHelper :: [Prop] -> [Prop] -> Bool
+proofFromHelper _ []      = True
+proofFromHelper xs (y:ys) = proofFromHelper xs ys && (elem y xs || isAxiom y || isModusPonens)
+    where
+        p = ys ++ xs
+        modusPonensPair = \(a, b) -> modusPonens a b y
+        isModusPonens = any modusPonensPair [(a, b) | a <- p, b <- p, a /= b]
 
