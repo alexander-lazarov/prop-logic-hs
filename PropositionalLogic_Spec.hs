@@ -151,6 +151,46 @@ main = hspec $ do
     it "example 6" $ do
       (semanticallyImplies y (x `Implies` x)) `shouldBe` True
 
+  describe "semanticallyEquivalent" $ do
+    it "example 1" $ do
+      (semanticallyEquivalent x x) `shouldBe` True
+
+    it "example 2" $ do
+      (semanticallyEquivalent x y) `shouldBe` False
+
+    it "example 3" $ do
+      (semanticallyEquivalent (x `And` y) (y `And` x)) `shouldBe` True
+
+  describe "isAxiom" $ do
+    it "not an axiom 1" $ do
+      (isAxiom $ x `Implies` y `Implies` z) `shouldBe` False
+    it "not an axiom 2" $ do
+      (isAxiom nax2) `shouldBe` False
+    it "not an axiom 3" $ do
+      (isAxiom nax3) `shouldBe` False
+    it "THEN-1 - case 1" $ do
+      (isAxiom $ x `Implies` y `Implies` x) `shouldBe` True
+    it "THEN-1 - case 2" $ do
+      (isAxiom $ y `Implies` x `Implies` y) `shouldBe` True
+    it "THEN-1 - case 3" $ do
+      (isAxiom $ xiy `Implies` y `Implies` xiy) `shouldBe` True
+    it "THEN-2 - case 1" $ do
+      (isAxiom $ then2) `shouldBe` True
+    it "AND-1 - case 1" $ do
+      (isAxiom $ x `And` y `Implies` x) `shouldBe` True
+    it "AND-2 - case 1" $ do
+      (isAxiom $ x `And` y `Implies` y) `shouldBe` True
+    it "AND-3 - case 1" $ do
+      (isAxiom $ y `Implies` (x `Implies` (y `And` x))) `shouldBe` True
+    it "AND-3 - case 2" $ do
+      (isAxiom $ y `Implies` (x `Implies` (x `And` y))) `shouldBe` True
+    it "OR-1 - case 1" $ do
+      (isAxiom $ x `Implies` (x `Or` y)) `shouldBe` True
+    it "OR-2 - case 1" $ do
+      (isAxiom $ x `Implies` (y `Or` x)) `shouldBe` True
+    it "OR-3 - case 1" $ do
+      (isAxiom or3) `shouldBe` True
+
   where
     ct = Const True
     cf = Const False
@@ -158,3 +198,13 @@ main = hspec $ do
     env = [("x", True), ("y", False), ("z", True)]
     x = Var "x"
     y = Var "y"
+    z = Var "z"
+    xiy = x `Implies` y
+    xiz = x `Implies` z
+    yiz = y `Implies` z
+    xay = xiy `And` xiy
+    nax2 = xiy `Implies` xiy `Implies` x
+    nax3 = xiy `Implies` xiy `Implies` x
+    then2 = (x `Implies` yiz) `Implies` (xiy `Implies` xiz)
+    or3 = xiy `Implies` (yiz `Implies` (x `Implies` yiz))
+

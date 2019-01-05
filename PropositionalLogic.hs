@@ -12,6 +12,8 @@ module PropositionalLogic
 , isSatisfiable
 , isContradiction
 , semanticallyImplies
+, semanticallyEquivalent
+, isAxiom
 ) where
 
 type Name = String
@@ -90,3 +92,27 @@ semanticallyImplies :: Prop -> Prop -> Bool
 semanticallyImplies x y = all implies $ allEnvs vars
   where vars = allVars x ++ allVars y
         implies = \e -> evalWithEnv e $ x `Implies` y
+
+semanticallyEquivalent :: Prop -> Prop -> Bool
+semanticallyEquivalent x y = (semanticallyImplies x y) && (semanticallyImplies y x)
+
+isAxiom :: Prop -> Bool
+-- THEN-2
+isAxiom ((a `Implies` b `Implies` c)
+            `Implies`
+            ((d `Implies` e) `Implies` (f `Implies` g)))   = a == d && a == f && b == e && c == g
+
+-- OR-3
+isAxiom ((a `Implies` b)
+             `Implies`
+             ((c `Implies` d)
+                 `Implies` (e `Implies` (f `Implies` g)))) = a == e && b == c && b == f && d == g
+-- AND-3
+isAxiom (a `Implies` b `Implies` c `And` d)                = (b == c && a == d) || (a == c && b == d)
+-- THEN-1
+isAxiom (a `Implies` _ `Implies` c)                        = a == c
+-- AND-1 and AND-2
+isAxiom (a `And` b `Implies` c)                            = a == c || b == c
+-- OR-1 and OR-2
+isAxiom (a `Implies` b `Or` c)                             = a == b || a == c
+isAxiom _                                                  = False
