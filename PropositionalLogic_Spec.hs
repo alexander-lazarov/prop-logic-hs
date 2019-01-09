@@ -212,6 +212,20 @@ main = hspec $ do
       (proofFrom [] impl) `shouldBe` True
     it "case 3" $ do
       (proofFrom [] [x `And` y]) `shouldBe` False
+  describe "proove" $ do
+    it "case 1" $ do
+      (proove [] $ Not x) `shouldBe` Nothing
+    it "case 2" $ do
+      (proove [] $ x `Or` Not x) `shouldBe` Just []
+    it "case 3" $ do
+      (proove [x `And` y] $ y `And` x) `shouldBe` Just [x `And` y]
+    it "case 4" $ do
+      (proove [x `And` y] $ x) `shouldBe` Just [x `And` y]
+    it "case 5" $ do
+      (proove [x `And` y, y `And` z] $ x) `shouldBe` Just [x `And` y]
+    it "case 6" $ do
+      (proove [x `And` y] $ y `Implies` x `Implies` y `And` x) `shouldBe` Just []
+
 
   where
     ct = Const True

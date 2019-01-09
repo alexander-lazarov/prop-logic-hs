@@ -16,6 +16,7 @@ module PropositionalLogic
 , isAxiom
 , modusPonens
 , proofFrom
+, proove
 ) where
 
 type Name = String
@@ -142,4 +143,16 @@ proofFromHelper xs (y:ys) = (elem y xs || isAxiom y || isModusPonens) && proofFr
     p               = ys ++ xs
     modusPonensPair = \(a, b) -> modusPonens a b y
     isModusPonens   = any modusPonensPair [(a, b) | a <- p, b <- p]
+
+strictConcat :: (Maybe [a]) -> (Maybe [a]) -> (Maybe [a])
+strictConcat (Just xs) (Just ys) = Just (xs ++ ys)
+strictConcat _         _         = Nothing
+
+proove :: [Prop] -> Prop -> Maybe [Prop]
+proove gamma phi
+    | elem phi gamma = Just [phi]
+    | isAxiom phi    = Just []
+    | otherwise      = foldl (<>) Nothing $ map reverseModousPonens gamma
+    where
+      reverseModousPonens g = Just [g] `strictConcat` proove [x | x <- gamma, x /= g] (g `Implies` phi)
 
