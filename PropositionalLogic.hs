@@ -148,6 +148,7 @@ strictConcat :: (Maybe [a]) -> (Maybe [a]) -> (Maybe [a])
 strictConcat (Just xs) (Just ys) = Just (xs ++ ys)
 strictConcat _         _         = Nothing
 
+-- Not working properly but passes some of the tests --
 proove :: [Prop] -> Prop -> Maybe [Prop]
 proove gamma phi
     | elem phi gamma = Just [phi]
