@@ -1,4 +1,4 @@
-module Fn61062
+module Hw61062
 ( Name
 , Prop (..)
 , Environment
@@ -20,3 +20,4 @@ module Fn61062
 ) where
 
 import PropositionalLogic
+

@@ -267,3 +267,4 @@ main = hspec $ do
                , (x `Implies` (y `Implies` x))
                , (x `Implies` x)
                ]
+
